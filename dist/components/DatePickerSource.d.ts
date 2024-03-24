@@ -12,6 +12,8 @@ export declare type DatePickerSourceOptions = {
         year?: DatePickerValueFormater;
         month?: DatePickerValueFormater;
         day?: DatePickerValueFormater;
+        hour?: DatePickerValueFormater;
+        minute?: DatePickerValueFormater;
     };
 };
 declare class DatePickerSource {
@@ -22,5 +24,7 @@ declare class DatePickerSource {
     get years(): DatePickerSourceItem[];
     get months(): DatePickerSourceItem[];
     get days(): DatePickerSourceItem[];
+    get hours(): DatePickerSourceItem[];
+    get minutes(): DatePickerSourceItem[];
 }
 export default DatePickerSource;

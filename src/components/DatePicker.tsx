@@ -11,7 +11,7 @@ export type DatePickerProps = {
   /**
    * Callback for changing values.
    */
-  onChange: (year: number, month: number, day: number) => void;
+  onChange: (year: number, month: number, day: number, hour: number, minute: number) => void;
   /**
    * First date of date picker.
    */
@@ -25,6 +25,14 @@ export type DatePickerProps = {
    */
   initDate?: Date;
   /**
+   * Initial hour.
+   */
+  initHour?: number;
+  /**
+   * Initial minute.
+   */
+  initMinute?: number;
+  /**
    * Scroll infinitely or not.
    */
   infinite?: boolean;
@@ -35,6 +43,8 @@ export type DatePickerProps = {
     year?: DatePickerValueFormater;
     month?: DatePickerValueFormater;
     day?: DatePickerValueFormater;
+    hour?: DatePickerValueFormater;
+    minute?: DatePickerValueFormater;
   };
   /**
    * Classes of container element.
@@ -45,6 +55,8 @@ type DatePickerStateRef = {
   currentYear: number;
   currentMonth: number;
   currentDay: number;
+  currentHour: number;
+  currentMinute: number;
   source: DatePickerSource;
   onChange: DatePickerProps['onChange'];
   onChangeTimeout: NodeJS.Timeout | null;
@@ -65,6 +77,8 @@ function DatePicker({
     currentYear: fromDate.getFullYear(),
     currentMonth: fromDate.getMonth() + 1,
     currentDay: fromDate.getDate(),
+    currentHour: fromDate.getHours(),
+    currentMinute: fromDate.getMinutes(),
     source: new DatePickerSource({
       fromDate,
       toDate,
@@ -79,6 +93,8 @@ function DatePicker({
   const yearPickerRef = useRef<HTMLDivElement>(null);
   const monthPickerRef = useRef<HTMLDivElement>(null);
   const dayPickerRef = useRef<HTMLDivElement>(null);
+  const hourPickerRef = useRef<HTMLDivElement>(null);
+  const minutePickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     ref.source.init({
@@ -101,7 +117,13 @@ function DatePicker({
         clearTimeout(ref.onChangeTimeout);
       }
       ref.onChangeTimeout = setTimeout(() => {
-        ref.onChange(ref.currentYear, ref.currentMonth, ref.currentDay);
+        ref.onChange(
+          ref.currentYear,
+          ref.currentMonth,
+          ref.currentDay,
+          ref.currentHour,
+          ref.currentMinute
+        );
         ref.onChangeTimeout = null;
       }, ONCHANGE_TIMEOUT_DELAY);
     };
@@ -159,6 +181,32 @@ function DatePicker({
       },
     });
 
+    const hourSelector = new IosStylePicker(hourPickerRef.current!, {
+      variant: infinite ? 'infinite' : 'normal',
+      source: ref.source.hours,
+      onChange: selected => {
+        const changed = ref.currentHour !== selected.value;
+        ref.currentHour = selected.value;
+
+        if (changed) {
+          onChange();
+        }
+      },
+    });
+
+    const minuteSelector = new IosStylePicker(minutePickerRef.current!, {
+      variant: infinite ? 'infinite' : 'normal',
+      source: ref.source.minutes,
+      onChange: selected => {
+        const changed = ref.currentMinute !== selected.value;
+        ref.currentMinute = selected.value;
+
+        if (changed) {
+          onChange();
+        }
+      },
+    });
+
     setTimeout(() => {
       const initYear = initDate.getFullYear();
       const initMonth = initDate.getMonth() + 1;
@@ -177,6 +225,8 @@ function DatePicker({
       yearSelector.destroy();
       monthSelector.destroy();
       daySelector.destroy();
+      hourSelector.destroy();
+      minuteSelector.destroy();
     };
   }, [infinite]);
 
@@ -185,6 +235,8 @@ function DatePicker({
       <div ref={yearPickerRef} />
       <div ref={monthPickerRef} />
       <div ref={dayPickerRef} />
+      <div ref={hourPickerRef} />
+      <div ref={minutePickerRef} />
     </div>
   );
 }

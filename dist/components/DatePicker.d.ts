@@ -3,7 +3,7 @@ export declare type DatePickerProps = {
     /**
      * Callback for changing values.
      */
-    onChange: (year: number, month: number, day: number) => void;
+    onChange: (year: number, month: number, day: number, hour: number, minute: number) => void;
     /**
      * First date of date picker.
      */
@@ -17,6 +17,14 @@ export declare type DatePickerProps = {
      */
     initDate?: Date;
     /**
+     * Initial hour.
+     */
+    initHour?: number;
+    /**
+     * Initial minute.
+     */
+    initMinute?: number;
+    /**
      * Scroll infinitely or not.
      */
     infinite?: boolean;
@@ -27,6 +35,8 @@ export declare type DatePickerProps = {
         year?: DatePickerValueFormater;
         month?: DatePickerValueFormater;
         day?: DatePickerValueFormater;
+        hour?: DatePickerValueFormater;
+        minute?: DatePickerValueFormater;
     };
     /**
      * Classes of container element.

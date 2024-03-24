@@ -16,6 +16,8 @@ export type DatePickerSourceOptions = {
     year?: DatePickerValueFormater;
     month?: DatePickerValueFormater;
     day?: DatePickerValueFormater;
+    hour?: DatePickerValueFormater;
+    minute?: DatePickerValueFormater;
   };
 };
 
@@ -29,10 +31,14 @@ class DatePickerSource {
   #yearFormatter: DatePickerValueFormater;
   #monthFormatter: DatePickerValueFormater;
   #dayFormatter: DatePickerValueFormater;
+  #hourFormatter: DatePickerValueFormater;
+  #minuteFormatter: DatePickerValueFormater;
 
   #years: DatePickerSourceItem[];
   #months: DatePickerSourceItem[];
   #days: DatePickerSourceItem[];
+  #hours: DatePickerSourceItem[];
+  #minutes: DatePickerSourceItem[];
 
   constructor({
     fromDate,
@@ -50,10 +56,14 @@ class DatePickerSource {
     this.#yearFormatter = formatters?.year ?? koFormatter.year;
     this.#monthFormatter = formatters?.month ?? koFormatter.month;
     this.#dayFormatter = formatters?.day ?? koFormatter?.day;
+    this.#hourFormatter = formatters?.hour ?? koFormatter?.hour;
+    this.#minuteFormatter = formatters?.minute ?? koFormatter?.minute;
 
     this.#years = this.#getYears();
     this.#months = this.#getMonths();
     this.#days = this.#getDays();
+    this.#hours = this.#getHours();
+    this.#minutes = this.#getMinutes();
   }
 
   #getDefaultToDate() {
@@ -125,6 +135,14 @@ class DatePickerSource {
     return this.#getItems(fromDay, toDay, this.#dayFormatter);
   }
 
+  #getHours() {
+    return this.#getItems(0, 23, this.#hourFormatter);
+  }
+
+  #getMinutes() {
+    return this.#getItems(0, 59, this.#minuteFormatter);
+  }
+
   setCurrent(year: number, month?: number) {
     this.#currentYear = year;
     this.#months = this.#getMonths();
@@ -145,6 +163,14 @@ class DatePickerSource {
 
   get days() {
     return this.#days;
+  }
+
+  get hours() {
+    return this.#hours;
+  }
+
+  get minutes() {
+    return this.#minutes;
   }
 }
 
